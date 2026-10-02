@@ -1,0 +1,63 @@
+name: Verify and release CLI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the verified package through npm trusted publishing
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cli-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 24.12.0
+          registry-url: https://registry.npmjs.org
+      - run: npm install --global npm@11.19.1
+      - run: sudo apt-get update && sudo apt-get install --yes libsecret-1-0
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Verify release tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: node -e 'const version = require("./package.json").version; if (process.env.GITHUB_REF_NAME !== `v${version}`) throw new Error("Release tag must match package version")'
+      - name: Pack and inspect
+        run: |
+          mkdir release
+          npm pack --pack-destination release
+          tar -tzf release/*.tgz
+      - name: Test packed executable
+        run: |
+          npm install --prefix "$RUNNER_TEMP/athlendra-install" --omit=dev release/*.tgz
+          "$RUNNER_TEMP/athlendra-install/node_modules/.bin/athlendra" --version
+          "$RUNNER_TEMP/athlendra-install/node_modules/.bin/athlendra" --help
+          "$RUNNER_TEMP/athlendra-install/node_modules/.bin/athlendra" operations
+      - name: Sign exact tarball
+        run: npm run attest -- release/*.tgz release/provenance.sigstore
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: athlendra-cli-release
+          path: release/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Publish
+        if: startsWith(github.ref, 'refs/tags/') || inputs.publish == true
+        run: npm publish release/*.tgz --access public --provenance-file release/provenance.sigstore

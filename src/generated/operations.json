@@ -1,0 +1,336 @@
+{
+  "contractVersion": "v1",
+  "operations": [
+    {
+      "conditionalScopes": [],
+      "description": "Find clients by partial name or external reference.",
+      "example": {
+        "query": "Alex"
+      },
+      "name": "find_clients",
+      "path": "/api/agent/v1/operations/find_clients",
+      "requiresIdempotency": false,
+      "risk": "read",
+      "scopes": [
+        "clients:read"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Read one client profile by exact client ID.",
+      "example": {
+        "clientId": "client-id"
+      },
+      "name": "get_client",
+      "path": "/api/agent/v1/operations/get_client",
+      "requiresIdempotency": false,
+      "risk": "read",
+      "scopes": [
+        "clients:read"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Read scheduled sessions for one client in a bounded date range.",
+      "example": {
+        "clientId": "client-id",
+        "fromDate": "2026-01-05",
+        "toDate": "2026-01-05"
+      },
+      "name": "get_client_schedule",
+      "path": "/api/agent/v1/operations/get_client_schedule",
+      "requiresIdempotency": false,
+      "risk": "read",
+      "scopes": [
+        "sessions:read",
+        "clients:read"
+      ]
+    },
+    {
+      "conditionalScopes": [
+        {
+          "scopes": [
+            "notes:read"
+          ],
+          "when": "includePrivateNotes is true"
+        }
+      ],
+      "description": "Read one planned or completed session.",
+      "example": {
+        "sessionId": "session-id"
+      },
+      "name": "get_session",
+      "path": "/api/agent/v1/operations/get_session",
+      "requiresIdempotency": false,
+      "risk": "read",
+      "scopes": [
+        "sessions:read"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "List saved programs with filters and pagination.",
+      "example": {},
+      "name": "list_programs",
+      "path": "/api/agent/v1/operations/list_programs",
+      "requiresIdempotency": false,
+      "risk": "read",
+      "scopes": [
+        "programs:read"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Read one saved program and its current revision.",
+      "example": {
+        "programId": "program-id"
+      },
+      "name": "get_program",
+      "path": "/api/agent/v1/operations/get_program",
+      "requiresIdempotency": false,
+      "risk": "read",
+      "scopes": [
+        "programs:read"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Read bounded exercise history and progression data for one client.",
+      "example": {
+        "clientId": "client-id",
+        "fromDate": "2026-01-05",
+        "toDate": "2026-01-05"
+      },
+      "name": "get_client_progress",
+      "path": "/api/agent/v1/operations/get_client_progress",
+      "requiresIdempotency": false,
+      "risk": "read",
+      "scopes": [
+        "progress:read",
+        "clients:read"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Find exercise library entries by name and optional equipment filters.",
+      "example": {},
+      "name": "search_exercises",
+      "path": "/api/agent/v1/operations/search_exercises",
+      "requiresIdempotency": false,
+      "risk": "read",
+      "scopes": [
+        "exercises:read"
+      ]
+    },
+    {
+      "conditionalScopes": [
+        {
+          "scopes": [
+            "clients:read"
+          ],
+          "when": "clientId is provided"
+        },
+        {
+          "scopes": [
+            "exercises:read"
+          ],
+          "when": "resolveExercises is true"
+        }
+      ],
+      "description": "Before generating or editing program source, consult Open Workout Format specification and examples: https://github.com/jdelaire/open-workout-format/ Parse and validate Open Workout Format without saving it.",
+      "example": {
+        "source": "example"
+      },
+      "name": "validate_program",
+      "path": "/api/agent/v1/operations/validate_program",
+      "requiresIdempotency": false,
+      "risk": "read",
+      "scopes": [
+        "programs:read"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Create one coach-owned exercise library entry with an Athlendra-generated custom reference. This executes immediately after OAuth consent without per-call confirmation. Use a unique idempotency key.",
+      "example": {
+        "idempotencyKey": "cli-example-0001",
+        "loadMode": "per_hand",
+        "name": "example"
+      },
+      "name": "create_exercise",
+      "path": "/api/agent/v1/operations/create_exercise",
+      "requiresIdempotency": true,
+      "risk": "low_write",
+      "scopes": [
+        "exercises:write"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Update one exercise by exact exercise ID and exact version. This executes immediately after OAuth consent without per-call confirmation. Use a unique idempotency key.",
+      "example": {
+        "exerciseId": "exercise-id",
+        "expectedVersion": "1",
+        "idempotencyKey": "cli-example-0001",
+        "notes": "example"
+      },
+      "name": "update_exercise",
+      "path": "/api/agent/v1/operations/update_exercise",
+      "requiresIdempotency": true,
+      "risk": "low_write",
+      "scopes": [
+        "exercises:write"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Before generating or editing program source, consult Open Workout Format specification and examples: https://github.com/jdelaire/open-workout-format/ Save an unassigned program draft. This executes immediately after OAuth consent without per-call confirmation. Use a unique idempotency key.",
+      "example": {
+        "exerciseMappings": [],
+        "idempotencyKey": "cli-example-0001",
+        "source": "example"
+      },
+      "name": "save_program_draft",
+      "path": "/api/agent/v1/operations/save_program_draft",
+      "requiresIdempotency": true,
+      "risk": "low_write",
+      "scopes": [
+        "programs:write"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Add a coach-private note to a client or session. This executes immediately after OAuth consent without per-call confirmation. Use a unique idempotency key.",
+      "example": {
+        "content": "Example input",
+        "idempotencyKey": "cli-example-0001",
+        "target": {
+          "clientId": "client-id",
+          "expectedVersion": "1",
+          "type": "client"
+        }
+      },
+      "name": "add_coach_note",
+      "path": "/api/agent/v1/operations/add_coach_note",
+      "requiresIdempotency": true,
+      "risk": "low_write",
+      "scopes": [
+        "notes:write"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Assign a saved program to a client. The first call returns an Athlendra confirmation URL. After approval, repeat the identical call with the original idempotency key and returned confirmation ID. A version conflict requires rereading the targets and fresh approval.",
+      "example": {
+        "clientId": "client-id",
+        "expectedClientVersion": "1",
+        "expectedProgramVersion": "1",
+        "idempotencyKey": "cli-example-0001",
+        "programId": "program-id",
+        "startWeekMonday": "2026-01-05",
+        "weekdays": [
+          1
+        ]
+      },
+      "name": "assign_program",
+      "path": "/api/agent/v1/operations/assign_program",
+      "requiresIdempotency": true,
+      "risk": "high_write",
+      "scopes": [
+        "programs:write",
+        "sessions:write",
+        "clients:read"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Reschedule a planned session. The first call returns an Athlendra confirmation URL. After approval, repeat the identical call with the original idempotency key and returned confirmation ID. A version conflict requires rereading the session and fresh approval.",
+      "example": {
+        "expectedVersion": "1",
+        "idempotencyKey": "cli-example-0001",
+        "scheduledDate": "2026-01-05",
+        "sessionId": "session-id"
+      },
+      "name": "reschedule_session",
+      "path": "/api/agent/v1/operations/reschedule_session",
+      "requiresIdempotency": true,
+      "risk": "high_write",
+      "scopes": [
+        "sessions:write"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Create one client login account. The first call returns an Athlendra confirmation URL. Approval creates the account and shows its temporary password only in Athlendra. Repeat the identical call with the original idempotency key and confirmation ID to receive the non-secret result.",
+      "example": {
+        "email": "preview@example.invalid",
+        "idempotencyKey": "cli-example-0001",
+        "name": "example"
+      },
+      "name": "create_client",
+      "path": "/api/agent/v1/operations/create_client",
+      "requiresIdempotency": true,
+      "risk": "high_write",
+      "scopes": [
+        "clients:write"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Update one client profile by exact client ID and exact version. The first call returns an Athlendra confirmation URL. After approval, repeat the identical call with the original idempotency key and returned confirmation ID.",
+      "example": {
+        "clientId": "client-id",
+        "email": "preview@example.invalid",
+        "expectedVersion": "1",
+        "idempotencyKey": "cli-example-0001",
+        "name": "example"
+      },
+      "name": "update_client",
+      "path": "/api/agent/v1/operations/update_client",
+      "requiresIdempotency": true,
+      "risk": "high_write",
+      "scopes": [
+        "clients:write"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Revise a planned session. The first call returns an Athlendra confirmation URL. After approval, repeat the identical call with the original idempotency key and returned confirmation ID. A version conflict requires rereading the session and fresh approval.",
+      "example": {
+        "edits": [
+          {
+            "name": "example",
+            "type": "set-workout-name",
+            "workoutId": "workout-id"
+          }
+        ],
+        "expectedVersion": "1",
+        "idempotencyKey": "cli-example-0001",
+        "sessionId": "session-id"
+      },
+      "name": "revise_planned_session",
+      "path": "/api/agent/v1/operations/revise_planned_session",
+      "requiresIdempotency": true,
+      "risk": "high_write",
+      "scopes": [
+        "sessions:write"
+      ]
+    },
+    {
+      "conditionalScopes": [],
+      "description": "Delete a planned session. The first call returns an Athlendra confirmation URL. After approval, repeat the identical call with the original idempotency key and returned confirmation ID. A version conflict requires rereading the session and fresh approval.",
+      "example": {
+        "expectedVersion": "1",
+        "idempotencyKey": "cli-example-0001",
+        "sessionId": "session-id"
+      },
+      "name": "delete_planned_session",
+      "path": "/api/agent/v1/operations/delete_planned_session",
+      "requiresIdempotency": true,
+      "risk": "high_write",
+      "scopes": [
+        "sessions:write"
+      ]
+    }
+  ]
+}

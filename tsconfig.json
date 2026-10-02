@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2023",
+    "tsBuildInfoFile": "node_modules/.cache/athlendra-cli.tsbuildinfo",
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.json"
+  ]
+}

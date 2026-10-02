@@ -1,0 +1,46 @@
+{
+  "name": "@athlendra/cli",
+  "version": "0.1.0",
+  "description": "Command-line client for a configured Athlendra agent API",
+  "license": "UNLICENSED",
+  "type": "module",
+  "bin": {
+    "athlendra": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --platform node --target node22 --clean",
+    "prepack": "npm run build",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json",
+    "attest": "node scripts/attest.mjs"
+  },
+  "dependencies": {
+    "@napi-rs/keyring": "1.3.0",
+    "commander": "15.0.0",
+    "open": "11.0.1"
+  },
+  "devDependencies": {
+    "tsup": "8.5.1",
+    "typescript": "6.0.3",
+    "@types/node": "26.2.0",
+    "vitest": "4.1.11"
+  },
+  "engines": {
+    "node": "^22.18.0 || >=24.12.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdelaire/athlendra-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jdelaire/athlendra-cli/issues"
+  },
+  "homepage": "https://github.com/jdelaire/athlendra-cli#readme"
+}
